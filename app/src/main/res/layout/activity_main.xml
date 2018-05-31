@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+        <EditText
+            android:id="@+id/account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="账号"
+            android:text="mi5" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="密码"
+            android:text="mi5" />
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="登录" />
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="登出" />
+
+        <Button
+            android:id="@+id/relogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="重新登录" />
+
+        <EditText
+            android:id="@+id/to"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="接收方"
+            android:text="mi5" />
+
+        <EditText
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="内容"
+            android:text="测试" />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="发送" />
+
+        <Button
+            android:id="@+id/startRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开始录音" />
+
+        <Button
+            android:id="@+id/stopRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="停止录音" />
+
+        <Button
+            android:id="@+id/cancelRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="取消录音" />
+
+        <Button
+            android:id="@+id/listenRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="听录音" />
+
+        <EditText
+            android:id="@+id/registeraccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="注册用户名"
+            android:text="abc" />
+
+        <EditText
+            android:id="@+id/registerpsd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="注册密码"
+            android:text="abc" />
+
+        <Button
+            android:id="@+id/register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="注册" />
+
+        <Button
+            android:id="@+id/record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="查看聊天记录" />
+
+        <Button
+            android:id="@+id/check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="检测链接状态" />
+    </LinearLayout>
+</ScrollView>

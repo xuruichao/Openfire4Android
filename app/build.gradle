@@ -1,0 +1,44 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'//greendao
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+    defaultConfig {
+        applicationId "cn.edu.zafu.openfiredemo"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+greendao {
+    schemaVersion 1
+    daoPackage 'cn.edu.zafu.openfiredemo.greendao'
+    targetGenDir 'src/main/java'
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'org.igniterealtime.smack:smack-android-extensions:4.1.9'
+    compile 'org.igniterealtime.smack:smack-tcp:4.1.9'
+    //数据库
+    implementation 'org.greenrobot:greendao:3.2.2'
+    // add library
+    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.2'
+    /* compile(group: 'org.igniterealtime.smack', name: 'smack-android-extensions', version: '4.1.4') {
+             exclude(group: 'xpp3', module: 'xpp3')
+         }
+         compile(group: 'org.igniterealtime.smack', name: 'smack-tcp', version: '4.1.4') {
+             exclude(group: 'xpp3', module: 'xpp3')
+         }*/
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+}
