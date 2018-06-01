@@ -5,19 +5,26 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
+import org.jivesoftware.smack.filter.AndFilter;
+import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.iqregister.AccountManager;
@@ -26,7 +33,11 @@ import org.jivesoftware.smackx.receipts.DeliveryReceiptManager;
 import org.jivesoftware.smackx.receipts.DeliveryReceiptRequest;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+import cn.edu.zafu.openfiredemo.im.bean.Contacts;
 import cn.edu.zafu.openfiredemo.im.bean.IMMessage;
 
 
@@ -37,21 +48,31 @@ import cn.edu.zafu.openfiredemo.im.bean.IMMessage;
 
 public class IMService extends Service {
 
-    private AudioManager audioManager;
-
-    public static XMPPTCPConnection mConnection;
-
-    private InstantMessagingConfig mInstantMessagingConfig;
-
     private boolean mBroadcastEnable = false;
 
     private boolean mConnectedListenerAdded = false;
 
     private boolean mChatListenerAdded = false;
 
+    private AudioManager audioManager;
+
+    public static XMPPTCPConnection mConnection;
+
+    private InstantMessagingConfig mInstantMessagingConfig;
+
     private IMHandler mImHandler = new IMHandler();
 
     private IBinder mBinder = new IIMService.Stub() {
+
+        @Override
+        public void autoReceipt() throws RemoteException {
+            IMService.this.autoReceipt();
+        }
+
+        @Override
+        public void autoFriend(boolean autoFriend) throws RemoteException {
+            IMService.this.autoFriend(autoFriend);
+        }
 
         @Override
         public void createConnection() throws RemoteException {
@@ -94,6 +115,21 @@ public class IMService extends Service {
         }
 
         @Override
+        public void addFriend(String name) throws RemoteException {
+            IMService.this.addFriend(name);
+        }
+
+        @Override
+        public void deleteFriend(String name) throws RemoteException {
+            IMService.this.deleteFriend(name);
+        }
+
+        @Override
+        public List<Contacts> getContactsList() throws RemoteException {
+            return IMService.this.getFriendsList();
+        }
+
+        @Override
         public void addConnectionListener() throws RemoteException {
             IMService.this.addConnectionListener();
         }
@@ -115,6 +151,93 @@ public class IMService extends Service {
 
     };
 
+    private void deleteFriend(String name) {
+        Roster roster = Roster.getInstanceFor(mConnection);
+        RosterEntry entry = roster.getEntry(name + "@" + mInstantMessagingConfig.getServer());
+        try {
+            roster.removeEntry(entry);
+        } catch (SmackException.NotLoggedInException e) {
+            e.printStackTrace();
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void autoFriend(final boolean autoFriend) {
+        final AndFilter filter = new AndFilter(new StanzaTypeFilter(Presence.class));
+        mConnection.addAsyncStanzaListener(new StanzaListener() {
+            @Override
+            public void processPacket(Stanza packet) throws SmackException.NotConnectedException {
+                if (packet instanceof Presence) {
+                    Presence presence = (Presence) packet;
+                    String from = presence.getFrom();
+                    String fromUser = from.split("@")[0];
+                    if (presence.getType().equals(Presence.Type.subscribe)) {//对方请求订阅
+                        if (autoFriend) {
+                            Presence pres = new Presence(Presence.Type.subscribed);
+                            pres.setTo(from);
+                            try {
+                                mConnection.sendStanza(pres);
+                                addFriend(fromUser);
+                            } catch (SmackException.NotConnectedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else if (presence.getType().equals(Presence.Type.subscribed)) {//对方同意订阅
+                        Log.e("TAG", "同意订阅" + from);
+                    } else if (presence.getType().equals(Presence.Type.unsubscribe)) {//对方取消订阅
+                        Log.e("TAG", "取消订阅" + from);
+                    } else if (presence.getType().equals(Presence.Type.unsubscribed)) {//对方拒绝订阅
+                        Log.e("TAG", "拒绝订阅" + from);
+                    } else if (presence.getType().equals(Presence.Type.unavailable)) {//离线
+                       // Log.e("TAG", "离线" + from);
+                    } else if (presence.getType().equals(Presence.Type.available)) {//上线
+                       // Log.e("TAG", "上线" + from);
+                    }
+                }
+            }
+        }, filter);
+    }
+
+    private void autoReceipt() {
+        ProviderManager.addExtensionProvider(DeliveryReceipt.ELEMENT, DeliveryReceipt.NAMESPACE, new DeliveryReceipt.Provider());
+        ProviderManager.addExtensionProvider(DeliveryReceiptRequest.ELEMENT, DeliveryReceipt.NAMESPACE, new DeliveryReceiptRequest.Provider());
+        DeliveryReceiptManager.getInstanceFor(mConnection).autoAddDeliveryReceiptRequests();
+    }
+
+    private List<Contacts> getFriendsList() {
+        Roster instanceFor = Roster.getInstanceFor(mConnection);
+        Set<RosterEntry> entries = instanceFor.getEntries();
+        List<Contacts> list = new ArrayList<>(entries.size());
+        for (RosterEntry entry : entries) {
+            Contacts contacts = new Contacts();
+            contacts.setUser(entry.getUser());
+            contacts.setName(entry.getName());
+            contacts.setType(entry.getType().toString());
+            list.add(contacts);
+        }
+        return list;
+    }
+
+    private void addFriend(String name) {
+        Roster roster = Roster.getInstanceFor(mConnection);
+        try {
+            roster.createEntry(name.trim() + "@" + mInstantMessagingConfig.getServer(), name, new String[]{"Friends"});
+        } catch (SmackException.NotLoggedInException e) {
+            e.printStackTrace();
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void createConnection() {
         XMPPTCPConnectionConfiguration.Builder builder = XMPPTCPConnectionConfiguration.builder();
         builder.setServiceName(mInstantMessagingConfig.getServer());
@@ -123,13 +246,9 @@ public class IMService extends Service {
         builder.setResource(mInstantMessagingConfig.getRes());
         builder.setCompressionEnabled(false);
         builder.setDebuggerEnabled(true);
-        builder.setSendPresence(true);
+        builder.setSendPresence(false);
         builder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
         mConnection = new XMPPTCPConnection(builder.build());
-        //消息回执
-        ProviderManager.addExtensionProvider(DeliveryReceipt.ELEMENT, DeliveryReceipt.NAMESPACE, new DeliveryReceipt.Provider());
-        ProviderManager.addExtensionProvider(DeliveryReceiptRequest.ELEMENT, DeliveryReceipt.NAMESPACE, new DeliveryReceiptRequest.Provider());
-        DeliveryReceiptManager.getInstanceFor(mConnection).autoAddDeliveryReceiptRequests();
     }
 
     private void login(final String account, final String password) {
@@ -175,7 +294,7 @@ public class IMService extends Service {
         }).start();
     }
 
-    public void register(String account, String password) {
+    private void register(String account, String password) {
         try {
             AccountManager.getInstance(mConnection).createAccount(account, password);
         } catch (SmackException.NoResponseException e) {
@@ -187,7 +306,7 @@ public class IMService extends Service {
         }
     }
 
-    public void sendMessage(String targetAddress, String content) {
+    private void sendMessage(String targetAddress, String content) {
         try {
             Message message = new Message();
             message.setBody(content);
@@ -202,11 +321,11 @@ public class IMService extends Service {
         }
     }
 
-    public void disconnect() {
+    private void disconnect() {
         mConnection.disconnect();
     }
 
-    public boolean isConnected() {
+    private boolean isConnected() {
         return mConnection.isConnected();
     }
 

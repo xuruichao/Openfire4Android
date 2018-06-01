@@ -1,4 +1,4 @@
-package cn.edu.zafu.openfiredemo.im;
+package cn.edu.zafu.openfiredemo;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.edu.zafu.openfiredemo.R;
 import cn.edu.zafu.openfiredemo.im.db.bean.ChatRecord;
 
 /**

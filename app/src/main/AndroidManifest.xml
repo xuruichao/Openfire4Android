@@ -26,7 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".im.RecordActivity" />
+        <activity android:name=".RecordActivity" />
+        <activity android:name=".FriendsActivity" />
 
         <service
             android:name=".im.IMService"

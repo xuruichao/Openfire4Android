@@ -13,14 +13,13 @@ import android.widget.Toast;
 import cn.edu.zafu.openfiredemo.im.ChatListener;
 import cn.edu.zafu.openfiredemo.im.ConnectionListener;
 import cn.edu.zafu.openfiredemo.im.InstantMessaging;
-import cn.edu.zafu.openfiredemo.im.RecordActivity;
 import cn.edu.zafu.openfiredemo.im.bean.IMMessage;
 import cn.edu.zafu.openfiredemo.im.db.DBService;
 import cn.edu.zafu.openfiredemo.im.db.bean.ChatRecord;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText account, password, to, content, registeraccount, registerpsd;
+    private EditText account, password, to, content, registeraccount, registerpsd, et_friend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         content = findViewById(R.id.content);
         registeraccount = findViewById(R.id.registeraccount);
         registerpsd = findViewById(R.id.registerpsd);
+        et_friend = findViewById(R.id.et_friend);
 
         findViewById(R.id.login).setOnClickListener(this);
         findViewById(R.id.logout).setOnClickListener(this);
@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.listenRecord).setOnClickListener(this);
         findViewById(R.id.register).setOnClickListener(this);
         findViewById(R.id.check).setOnClickListener(this);
+        findViewById(R.id.addFriend).setOnClickListener(this);
+        findViewById(R.id.deleteFriend).setOnClickListener(this);
+        findViewById(R.id.friendsList).setOnClickListener(this);
 
         InstantMessaging.with().addConnectionListener(new ConnectionListener() {
             @Override
@@ -109,6 +112,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.deleteFriend:
+                InstantMessaging.with().deleteFriend(et_friend.getText().toString());
+                break;
+            case R.id.friendsList:
+                startActivity(new Intent(this, FriendsActivity.class));
+                break;
+            case R.id.addFriend:
+                InstantMessaging.with().addFriend(et_friend.getText().toString());
+                break;
             case R.id.check:
                 boolean isConnected = InstantMessaging.with().isConnected();
                 Toast.makeText(this, isConnected ? "连上了" : " 没连上", Toast.LENGTH_SHORT).show();

@@ -21,6 +21,8 @@ public class Constant {
 
     public static final String QUEUE_CREATE_CONNECTION = "queue_create_connection";
 
+    public static final String QUEUE_INIT_CONFIG = "queue_init_config";
+
     public static final String RECORD_FILE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SoundRecorder";
 
     public static final String RECORD_FILE_PATH = RECORD_FILE_DIR + "/" + RECORD_FILE_NAME;

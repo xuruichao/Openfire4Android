@@ -15,14 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="账号"
-            android:text="mi5" />
+            android:text="admin" />
 
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="密码"
-            android:text="mi5" />
+            android:text="admin" />
 
         <Button
             android:id="@+id/login"
@@ -117,5 +117,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="检测链接状态" />
+
+        <EditText
+            android:id="@+id/et_friend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请求添加谁为好友"
+            android:text="abc" />
+
+        <Button
+            android:id="@+id/addFriend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="加好友" />
+
+        <Button
+            android:id="@+id/deleteFriend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="删好友" />
+
+        <Button
+            android:id="@+id/friendsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="查看好友列表" />
     </LinearLayout>
 </ScrollView>

@@ -1,4 +1,4 @@
-package cn.edu.zafu.openfiredemo.im;
+package cn.edu.zafu.openfiredemo;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import java.util.List;
 
 import cn.edu.zafu.openfiredemo.R;
+import cn.edu.zafu.openfiredemo.RecordAdapter;
+import cn.edu.zafu.openfiredemo.im.InstantMessaging;
 import cn.edu.zafu.openfiredemo.im.db.bean.ChatRecord;
 
 /**

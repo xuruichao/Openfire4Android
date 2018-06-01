@@ -25,11 +25,59 @@ public class InstantMessagingConfig implements Parcelable {
 
     private int mPort;
 
+    private boolean mAutoReceipt;
+
+    private boolean mAutoFriend;
+
     public InstantMessagingConfig(Builder builder) {
         this.mServer = builder.server;
         this.mPort = builder.port;
         this.mRes = builder.res;
+        this.mAutoReceipt = builder.autoReceipt;
+        this.mAutoFriend = builder.autoFriend;
     }
+
+    protected InstantMessagingConfig(Parcel in) {
+        mTempUserName = in.readString();
+        mUserName = in.readString();
+        mTempPassword = in.readString();
+        mPassword = in.readString();
+        mServer = in.readString();
+        mRes = in.readString();
+        mPort = in.readInt();
+        mAutoReceipt = in.readByte() != 0;
+        mAutoFriend = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mTempUserName);
+        dest.writeString(mUserName);
+        dest.writeString(mTempPassword);
+        dest.writeString(mPassword);
+        dest.writeString(mServer);
+        dest.writeString(mRes);
+        dest.writeInt(mPort);
+        dest.writeByte((byte) (mAutoReceipt ? 1 : 0));
+        dest.writeByte((byte) (mAutoFriend ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<InstantMessagingConfig> CREATOR = new Creator<InstantMessagingConfig>() {
+        @Override
+        public InstantMessagingConfig createFromParcel(Parcel in) {
+            return new InstantMessagingConfig(in);
+        }
+
+        @Override
+        public InstantMessagingConfig[] newArray(int size) {
+            return new InstantMessagingConfig[size];
+        }
+    };
 
     public String getTempUserName() {
         return mTempUserName;
@@ -67,48 +115,30 @@ public class InstantMessagingConfig implements Parcelable {
         return mPassword;
     }
 
+    public boolean isAutoReceipt() {
+        return mAutoReceipt;
+    }
+
+    public boolean isAutoFriend() {
+        return mAutoFriend;
+    }
+
     public void saveUserInfo() {
         mUserName = getTempUserName();
         mPassword = getTempPassword();
-    }
-
-    protected InstantMessagingConfig(Parcel in) {
-        mServer = in.readString();
-        mRes = in.readString();
-        mPort = in.readInt();
-    }
-
-    public static final Creator<InstantMessagingConfig> CREATOR = new Creator<InstantMessagingConfig>() {
-        @Override
-        public InstantMessagingConfig createFromParcel(Parcel in) {
-            return new InstantMessagingConfig(in);
-        }
-
-        @Override
-        public InstantMessagingConfig[] newArray(int size) {
-            return new InstantMessagingConfig[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mServer);
-        dest.writeString(mRes);
-        dest.writeInt(mPort);
     }
 
     public static class Builder {
 
         private String server;
 
+        private String res;
+
         private int port;
 
-        private String res;
+        private boolean autoReceipt;
+
+        private boolean autoFriend;
 
         public Builder server(String server) {
             this.server = server;
@@ -122,6 +152,16 @@ public class InstantMessagingConfig implements Parcelable {
 
         public Builder res(String res) {
             this.res = res;
+            return this;
+        }
+
+        public Builder autoReceipt(boolean autoReceipt) {
+            this.autoReceipt = autoReceipt;
+            return this;
+        }
+
+        public Builder autoFriend(boolean autoFriend) {
+            this.autoFriend = autoFriend;
             return this;
         }
 

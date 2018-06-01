@@ -36,10 +36,11 @@ public class App extends Application {
                     .server(serverAdd)
                     .port(port)
                     .res(Constant.RES_PHONE)
+                    .autoReceipt(true)
+                    .autoFriend(true)
                     .build();
-            InstantMessaging.init().config(config).install();
+            InstantMessaging.init().config(config).start();
         }
-
     }
 
     private boolean isMainProcess() {
