@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import cn.edu.zafu.openfiredemo.im.ChatListener;
-import cn.edu.zafu.openfiredemo.im.ConnectionListener;
+import cn.edu.zafu.openfiredemo.im.listener.ChatListener;
+import cn.edu.zafu.openfiredemo.im.listener.ConnectionListener;
 import cn.edu.zafu.openfiredemo.im.InstantMessaging;
 import cn.edu.zafu.openfiredemo.im.bean.IMMessage;
 import cn.edu.zafu.openfiredemo.im.db.DBService;
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.addFriend).setOnClickListener(this);
         findViewById(R.id.deleteFriend).setOnClickListener(this);
         findViewById(R.id.friendsList).setOnClickListener(this);
+        findViewById(R.id.loginAnonymously).setOnClickListener(this);
 
         InstantMessaging.with().addConnectionListener(new ConnectionListener() {
             @Override
@@ -89,6 +90,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void reconnectionFailed() {
                 Toast.makeText(MainActivity.this, "reconnectionFailed", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void connectionException() {
+                Toast.makeText(MainActivity.this, "connectionException", Toast.LENGTH_SHORT).show();
+            }
         });
         InstantMessaging.with().addChatListener(new ChatListener() {
 
@@ -112,6 +118,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.loginAnonymously:
+                InstantMessaging.with().loginAnonymously();
+                break;
             case R.id.deleteFriend:
                 InstantMessaging.with().deleteFriend(et_friend.getText().toString());
                 break;

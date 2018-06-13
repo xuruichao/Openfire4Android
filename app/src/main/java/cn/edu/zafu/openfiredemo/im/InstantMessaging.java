@@ -19,6 +19,10 @@ import cn.edu.zafu.openfiredemo.im.bean.Contacts;
 import cn.edu.zafu.openfiredemo.im.bean.IMMessage;
 import cn.edu.zafu.openfiredemo.im.db.DBService;
 import cn.edu.zafu.openfiredemo.im.db.bean.ChatRecord;
+import cn.edu.zafu.openfiredemo.im.listener.ChatListener;
+import cn.edu.zafu.openfiredemo.im.listener.ConnectionListener;
+import cn.edu.zafu.openfiredemo.im.listener.IMListenerManager;
+import cn.edu.zafu.openfiredemo.im.uitl.Constant;
 
 /**
  * 即时通讯类
@@ -162,6 +166,14 @@ public class InstantMessaging {
     public void login(String account, String password) {
         try {
             mImService.login(account, password);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loginAnonymously() {
+        try {
+            mImService.loginAnonymously();
         } catch (RemoteException e) {
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package cn.edu.zafu.openfiredemo.im;
+package cn.edu.zafu.openfiredemo.im.audio;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -7,6 +7,8 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+
+import cn.edu.zafu.openfiredemo.im.uitl.Constant;
 
 /**
  * RecordController

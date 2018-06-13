@@ -6,7 +6,7 @@ import android.content.Context;
 
 import java.util.List;
 
-import cn.edu.zafu.openfiredemo.im.Constant;
+import cn.edu.zafu.openfiredemo.im.uitl.Constant;
 import cn.edu.zafu.openfiredemo.im.InstantMessaging;
 import cn.edu.zafu.openfiredemo.im.InstantMessagingConfig;
 import cn.edu.zafu.openfiredemo.im.db.DBService;

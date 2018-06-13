@@ -31,6 +31,12 @@
             android:text="登录" />
 
         <Button
+            android:id="@+id/loginAnonymously"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="匿名登录" />
+
+        <Button
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

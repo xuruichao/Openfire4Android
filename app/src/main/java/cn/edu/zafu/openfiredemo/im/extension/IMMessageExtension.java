@@ -1,4 +1,4 @@
-package cn.edu.zafu.openfiredemo.im;
+package cn.edu.zafu.openfiredemo.im.extension;
 
 import android.annotation.SuppressLint;
 import android.provider.Settings;
@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import org.jivesoftware.smack.packet.ExtensionElement;
 
 import cn.edu.zafu.openfiredemo.App;
+import cn.edu.zafu.openfiredemo.im.uitl.XmlBuilder;
 
 /**
  * 消息体

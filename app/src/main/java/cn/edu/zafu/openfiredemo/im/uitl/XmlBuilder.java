@@ -1,4 +1,4 @@
-package cn.edu.zafu.openfiredemo.im;
+package cn.edu.zafu.openfiredemo.im.uitl;
 
 import java.util.Map;
 

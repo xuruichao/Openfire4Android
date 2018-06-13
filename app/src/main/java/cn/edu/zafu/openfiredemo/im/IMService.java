@@ -37,8 +37,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import cn.edu.zafu.openfiredemo.im.audio.AudioManager;
 import cn.edu.zafu.openfiredemo.im.bean.Contacts;
 import cn.edu.zafu.openfiredemo.im.bean.IMMessage;
+import cn.edu.zafu.openfiredemo.im.extension.IMMessageExtension;
+import cn.edu.zafu.openfiredemo.im.filter.UserChangeFilter;
+import cn.edu.zafu.openfiredemo.im.listener.IMListenerManager;
+import cn.edu.zafu.openfiredemo.im.uitl.Constant;
+import cn.edu.zafu.openfiredemo.im.watcher.IMHandler;
 
 
 /**
@@ -82,6 +88,11 @@ public class IMService extends Service {
         @Override
         public void login(String account, String password) throws RemoteException {
             IMService.this.login(account, password);
+        }
+
+        @Override
+        public void loginAnonymously() throws RemoteException {
+            IMService.this.loginAnonymously();
         }
 
         @Override
@@ -150,6 +161,18 @@ public class IMService extends Service {
         }
 
     };
+
+    private void loginAnonymously() {
+        try {
+            mConnection.loginAnonymously();
+        } catch (XMPPException e) {
+            e.printStackTrace();
+        } catch (SmackException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void deleteFriend(String name) {
         Roster roster = Roster.getInstanceFor(mConnection);
@@ -249,6 +272,12 @@ public class IMService extends Service {
         builder.setSendPresence(false);
         builder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
         mConnection = new XMPPTCPConnection(builder.build());
+        mConnection.addAsyncStanzaListener(new StanzaListener() {
+            @Override
+            public void processPacket(Stanza packet) throws SmackException.NotConnectedException {
+
+            }
+        }, new UserChangeFilter());
     }
 
     private void login(final String account, final String password) {
@@ -283,10 +312,13 @@ public class IMService extends Service {
                         }
                     });
                 } catch (SmackException e) {
+                    IMService.this.sendListenerBroadcast(IMListenerManager.CONNECTION_EXCEPTION);
                     e.printStackTrace();
                 } catch (IOException e) {
+                    IMService.this.sendListenerBroadcast(IMListenerManager.CONNECTION_EXCEPTION);
                     e.printStackTrace();
                 } catch (XMPPException e) {
+                    IMService.this.sendListenerBroadcast(IMListenerManager.CONNECTION_EXCEPTION);
                     e.printStackTrace();
                 }
 

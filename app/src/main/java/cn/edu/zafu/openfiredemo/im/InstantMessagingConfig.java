@@ -128,6 +128,7 @@ public class InstantMessagingConfig implements Parcelable {
         mPassword = getTempPassword();
     }
 
+    @SuppressWarnings("SameParameterValue")
     public static class Builder {
 
         private String server;

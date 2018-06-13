@@ -1,4 +1,4 @@
-package cn.edu.zafu.openfiredemo.im;
+package cn.edu.zafu.openfiredemo.im.listener;
 
 /**
  * 监听连接接口
@@ -20,4 +20,6 @@ public interface ConnectionListener {
     void reconnectingIn();
 
     void reconnectionFailed();
+
+    void connectionException();
 }

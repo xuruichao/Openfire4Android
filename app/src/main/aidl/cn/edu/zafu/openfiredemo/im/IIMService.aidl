@@ -13,6 +13,8 @@ interface IIMService {
 
     void login(String account, String password);
 
+    void loginAnonymously();
+
     void register(String account, String password);
 
     void startRecord();

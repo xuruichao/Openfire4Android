@@ -1,4 +1,4 @@
-package cn.edu.zafu.openfiredemo.im;
+package cn.edu.zafu.openfiredemo.im.listener;
 
 import cn.edu.zafu.openfiredemo.im.bean.IMMessage;
 

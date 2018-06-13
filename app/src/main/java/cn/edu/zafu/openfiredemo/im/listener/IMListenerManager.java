@@ -1,5 +1,6 @@
-package cn.edu.zafu.openfiredemo.im;
+package cn.edu.zafu.openfiredemo.im.listener;
 
+import cn.edu.zafu.openfiredemo.im.extension.IMMessageExtension;
 import cn.edu.zafu.openfiredemo.im.bean.IMMessage;
 
 /**
@@ -46,6 +47,11 @@ public class IMListenerManager {
      */
     public static final String RECONNECTION_FAILED = "reconnection_failed";
 
+    /**
+     * 连接异常，可能由各种原因导致，超时，验证错误等等
+     */
+    public static final String CONNECTION_EXCEPTION = "connection_exception";
+
     public static void listener(String message, ConnectionListener l) {
         switch (message) {
             case CONNECTION_CONNECTED:
@@ -81,6 +87,11 @@ public class IMListenerManager {
             case RECONNECTION_FAILED:
                 if (l != null) {
                     l.reconnectionFailed();
+                }
+                break;
+            case CONNECTION_EXCEPTION:
+                if (l != null) {
+                    l.connectionException();
                 }
                 break;
         }

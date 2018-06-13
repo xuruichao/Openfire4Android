@@ -1,4 +1,6 @@
-package cn.edu.zafu.openfiredemo.im;
+package cn.edu.zafu.openfiredemo.im.watcher;
+
+import cn.edu.zafu.openfiredemo.im.IMService;
 
 /**
  * ConnectRunnable
